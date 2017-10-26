@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    MIT License
+   
+    Copyright (c) 2017 Julien Le Sauce
+   
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+   
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+   
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+ -->
+
+<!--
+	Document    : log4j.xml
+	Created on  : 12 Nov 2013
+	Author      : AwaX
+	Description : Set up the log4j properties.
+-->
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<!-- the expected format for the xml configuration files is defined by the log4j.dtd
+which is located in the log4j distribution jar in the package org.apache.log4j.xml. -->
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false" threshold="null" reset="false">
+
+	<!-- STD_ERR Appender (level >= warn) -->
+	<appender name="STD_ERR" class="org.apache.log4j.ConsoleAppender">
+		<param name="target" value="System.err"/>
+		<param name="threshold" value="warn" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p [%d{HH:mm:ss.SSS}] (%c{1}.%M) : %m%n" />
+		</layout>
+	</appender>
+
+	<!-- STD_OUT Appender (trace <= level <= info)-->
+	<appender name="STD_OUT" class="org.apache.log4j.ConsoleAppender">
+		<param name="target" value="System.out"/>
+		<param name="threshold" value="trace" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p [%d{HH:mm:ss.SSS}] (%c{1}.%M) : %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="trace" />
+			<param name="LevelMax" value="info" />
+		</filter>
+	</appender>
+
+	<!-- LOG FILE Appender (level >= debug) -->
+	<appender name="LOG_FILE" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="trace.log" />
+		<param name="MaxFileSize" value="5MB" />
+		<param name="threshold" value="debug" />
+		<param name="Append" value="true" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%-5p [%d{dd MMM yyyy HH:mm:ss.SSS}] (%c{1}.%M) : %m%n"/>
+		</layout>
+	</appender>
+
+	<!-- Specific logger for Apache Commons -->
+	<logger name="org.apache.commons">
+		<level value="info"/> 
+		<appender-ref ref="STD_ERR" />
+		<appender-ref ref="STD_OUT" />
+		<appender-ref ref="LOG_FILE" />
+	</logger>
+
+	<!-- Root Logger -->
+	<root>
+		<priority value="debug" />
+		<appender-ref ref="STD_ERR" />
+		<appender-ref ref="STD_OUT" />
+		<appender-ref ref="LOG_FILE" />
+	</root>
+</log4j:configuration>
